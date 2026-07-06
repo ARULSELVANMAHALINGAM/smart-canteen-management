@@ -92,12 +92,12 @@ export default function LandingPage({ onExploreMenu, onOpenLogin, onViewDisplay,
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <div className="flex items-center gap-3 shrink-0">
-            <motion.div 
-              whileHover={{ rotate: 15 }}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 shadow-lg shadow-amber-500/20"
-            >
-              <Utensils className="h-5 w-5 text-black font-extrabold" />
-            </motion.div>
+            <motion.img 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              src="/logo.svg" 
+              alt="Smart Canteen Logo" 
+              className="h-10 w-10 object-contain" 
+            />
             <span className="font-display text-xl font-bold tracking-tight text-white">
               SMART<span className="text-amber-500">CANTEEN</span>
             </span>

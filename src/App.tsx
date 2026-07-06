@@ -668,9 +668,7 @@ export default function App() {
         <header className="sticky top-0 z-40 w-full glass-panel px-6 py-4 md:px-12 border-b border-white/5">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <div className="flex items-center gap-3 shrink-0">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-amber-500 to-amber-600">
-                <Utensils className="h-4 w-4 text-black font-bold" />
-              </div>
+              <img src="/logo.svg" alt="Smart Canteen Logo" className="h-9 w-9 object-contain" />
               <span className="font-display text-lg font-bold tracking-tight text-white">
                 SMART<span className="text-amber-500">CANTEEN</span>
               </span>
