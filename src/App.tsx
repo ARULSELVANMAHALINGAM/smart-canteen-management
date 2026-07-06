@@ -604,6 +604,10 @@ export default function App() {
       updatedAt: new Date().toISOString()
     };
 
+    // Clear the cart instantly to prevent duplicate checkouts and update UI badge
+    clearCart();
+    setIsCartOpen(false);
+
     try {
       // 1. Verify simulation on custom endpoint
       try {
@@ -636,8 +640,6 @@ export default function App() {
       }
 
       setViewingOrderId(newOrder.id);
-      clearCart();
-      setIsCartOpen(false);
     } catch (error) {
       try {
         handleFirestoreError(error, OperationType.WRITE, `orders/${newOrder.id}`);
@@ -646,8 +648,6 @@ export default function App() {
       }
       setOrders((prev) => [newOrder, ...prev]);
       setViewingOrderId(newOrder.id);
-      clearCart();
-      setIsCartOpen(false);
     }
   };
 
