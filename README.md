@@ -1,5 +1,7 @@
 # Smart Canteen Ordering System
 
+**Live Demo:** [https://smart-canteen-management-five.vercel.app](https://smart-canteen-management-five.vercel.app)
+
 A secure, high-fidelity full-stack Smart Canteen Ordering & Token Management System. Designed for university and corporate canteens, it features role-based dashboards, automated token generation, live kitchen display screens, real-time tracking, and **production-grade secure payment gateway architectures**.
 
 ---
