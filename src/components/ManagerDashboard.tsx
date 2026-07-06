@@ -18,7 +18,9 @@ import {
   Trash2, 
   X,
   ClipboardList,
-  Search
+  Search,
+  History,
+  Timer
 } from "lucide-react";
 import { MenuItem, Order, Category } from "../types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
@@ -105,9 +107,31 @@ export default function ManagerDashboard({
   currency = "$"
 }: ManagerDashboardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<"analytics" | "menu" | "categories" | "staff" | "manager_logs">("analytics");
+  const [activeTab, setActiveTab] = useState<"analytics" | "history" | "menu" | "categories" | "staff" | "manager_logs">("analytics");
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPrice, setTempPrice] = useState<string>("");
+  const [historySearch, setHistorySearch] = useState("");
+
+  const historyOrders = orders.filter(
+    (o) => o.status === "picked_up" || o.status === "cancelled"
+  );
+
+  const filteredHistory = historyOrders.filter((order) => {
+    const query = historySearch.toLowerCase();
+    return (
+      order.id.toLowerCase().includes(query) ||
+      order.token.toLowerCase().includes(query) ||
+      order.userName.toLowerCase().includes(query) ||
+      order.items.some((item) => item.name.toLowerCase().includes(query))
+    );
+  });
+
+  const getPrepDuration = (startIso: string, endIso: string) => {
+    const start = new Date(startIso).getTime();
+    const end = new Date(endIso).getTime();
+    const mins = Math.max(1, Math.round((end - start) / (1000 * 60)));
+    return `${mins} min`;
+  };
 
   // Category modification and creation state
   const [isAddingCategory, setIsAddingCategory] = useState(false);
@@ -566,7 +590,7 @@ export default function ManagerDashboard({
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex bg-white/3 border border-white/5 rounded-2xl p-1">
-            {["analytics", "menu", "categories", "staff", "manager_logs"].map((tab) => (
+            {["analytics", "history", "menu", "categories", "staff", "manager_logs"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
@@ -685,6 +709,140 @@ export default function ManagerDashboard({
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "history" && (
+        <div className="space-y-8 animate-in fade-in duration-300">
+          <div className="bg-[#0b0c15]/60 border border-white/10 rounded-3xl p-6 space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-xl bg-white/3 text-gray-400 flex items-center justify-center border border-white/5">
+                  <History className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-display font-black text-white text-base">Completed Order History</h3>
+                  <p className="text-xs text-gray-400">All picked up and archived canteen transactions.</p>
+                </div>
+              </div>
+
+              {/* History Search */}
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search history..."
+                  value={historySearch}
+                  onChange={(e) => setHistorySearch(e.target.value)}
+                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-white/3 border border-white/5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-all font-medium"
+                />
+              </div>
+            </div>
+
+            {/* History Table */}
+            <div className="overflow-x-auto border border-white/5 rounded-2xl bg-[#040508]/40">
+              {filteredHistory.length === 0 ? (
+                <div className="text-center py-12 text-gray-500 font-mono text-[10px] uppercase tracking-wider">
+                  No historical logs matched
+                </div>
+              ) : (
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/5 bg-white/3 text-gray-500 font-mono font-bold text-[9px] uppercase tracking-wider">
+                      <th className="py-4 px-5">Token ID</th>
+                      <th className="py-4 px-5">Customer User</th>
+                      <th className="py-4 px-5">Dishes Summary</th>
+                      <th className="py-4 px-5">Paid</th>
+                      <th className="py-4 px-5">Time Placed</th>
+                      <th className="py-4 px-5">Time Delivered</th>
+                      <th className="py-4 px-5">Prep Speed</th>
+                      <th className="py-4 px-5 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {filteredHistory.map((order) => {
+                      const isCancelled = order.status === "cancelled";
+                      return (
+                        <tr key={order.id} className="hover:bg-white/2 transition-colors">
+                          <td className="py-4 px-5">
+                            <div className="flex items-center gap-2">
+                              <span className={`font-mono font-black text-sm px-2.5 py-0.5 rounded-lg border ${
+                                isCancelled 
+                                  ? "bg-red-500/10 text-red-400 border-red-500/15" 
+                                  : "bg-emerald-500/10 text-emerald-400 border-emerald-500/15"
+                              }`}>
+                                #{order.token}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-5">
+                            <div>
+                              <span className="font-bold text-gray-200 block">{order.userName}</span>
+                              <span className="text-[9px] text-gray-500 font-mono uppercase">UID: {order.userId.slice(0, 8)}</span>
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-5 max-w-[240px]">
+                            <div className="truncate text-gray-300 font-medium">
+                              {order.items.map((item) => `${item.quantity}x ${item.name}`).join(", ")}
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-5 text-amber-500 font-mono font-black">
+                            {currency}{(order.totalAmount ?? 0).toFixed(2)}
+                          </td>
+
+                          <td className="py-4 px-5 text-gray-400 font-mono">
+                            {new Date(order.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            <span className="text-[9px] text-gray-500 block">
+                              {new Date(order.createdAt).toLocaleDateString()}
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-5 text-gray-300 font-mono">
+                            {order.updatedAt ? (
+                              <>
+                                {new Date(order.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                <span className="text-[9px] text-gray-500 block">
+                                  {new Date(order.updatedAt).toLocaleDateString()}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-gray-500">-</span>
+                            )}
+                          </td>
+
+                          <td className="py-4 px-5">
+                            {isCancelled ? (
+                              <span className="text-gray-500 font-mono">-</span>
+                            ) : order.updatedAt ? (
+                              <div className="flex items-center gap-1.5 text-gray-300 font-mono font-bold">
+                                <Timer className="h-3.5 w-3.5 text-amber-500" />
+                                {getPrepDuration(order.createdAt, order.updatedAt)}
+                              </div>
+                            ) : (
+                              <span className="text-gray-500 font-mono">-</span>
+                            )}
+                          </td>
+
+                          <td className="py-4 px-5 text-right">
+                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${
+                              isCancelled 
+                                ? "bg-red-500/10 text-red-400 border-red-500/20" 
+                                : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            }`}>
+                              {isCancelled ? "Cancelled" : "Delivered"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
