@@ -8,3 +8,5 @@ coverage/
 !.env.example
 server/gateway-config.json
 firebase-applet-config.json
+
+.vercel
