@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "name": { "type": "string", "description": "Display name" },
+        "email": { "type": "string", "format": "email", "description": "User email" },
+        "role": { "type": "string", "enum": ["student", "kitchen", "manager", "admin"], "description": "Role of the user" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["uid", "name", "email", "role", "createdAt"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Food item available in the canteen",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "available": { "type": "boolean" },
+        "tags": { "type": "array" },
+        "stockLevel": { "type": "integer", "description": "Current quantity in stock" }
+      },
+      "required": ["id", "name", "description", "price", "category", "imageUrl", "available"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Menu category/section",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the category" },
+        "name": { "type": "string", "description": "Display name of the category" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "name", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "An order placed by a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "token": { "type": "string", "description": "Short code e.g. A24" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["placed", "accepted", "cooking", "packing", "ready", "picked_up", "cancelled"] },
+        "pickupTime": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "qrCode": { "type": "string" }
+      },
+      "required": ["id", "token", "userId", "userName", "items", "totalAmount", "status", "pickupTime", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles"
+    },
+    "menuItems/{itemId}": {
+      "schema": "MenuItem",
+      "description": "Collection of available canteen food items"
+    },
+    "categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Collection of menu categories"
+    },
+    "orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of customer food orders"
+    }
+  }
+}

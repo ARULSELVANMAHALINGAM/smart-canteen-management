@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to validate basic ID pattern
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Helper to check authentication
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Get user document safely
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+
+    // Role-based helpers
+    function hasRole(role) {
+      return isAuthenticated() && getUserData(request.auth.uid).role == role;
+    }
+
+    function isKitchenStaff() {
+      return hasRole('kitchen');
+    }
+
+    function isCanteenManager() {
+      return hasRole('manager');
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    // Users Collection Rules
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // MenuItems Collection Rules
+    match /menuItems/{itemId} {
+      allow read: if true; // anyone can view menu
+      allow write: if true; // anyone can manage items in sandbox
+    }
+
+    // Categories Collection Rules
+    match /categories/{categoryId} {
+      allow read, write: if true;
+    }
+
+    // Orders Collection Rules
+    match /orders/{orderId} {
+      allow read, write: if true;
+    }
+
+    // Configs Collection Rules
+    match /configs/{configId} {
+      allow read: if configId != 'gateway' || (isAuthenticated() && getUserData(request.auth.uid).role == 'admin');
+      allow write: if isAuthenticated() && getUserData(request.auth.uid).role == 'admin';
+    }
+
+    // System Logs Collection Rules
+    match /system_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Manager Logs Collection Rules
+    match /manager_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Staff Members Collection Rules
+    match /staff_members/{memberId} {
+      allow read, write: if true;
+    }
+
+    // Test Collection Rules
+    match /test/{testId} {
+      allow read, write: if true;
+    }
+  }
+}
