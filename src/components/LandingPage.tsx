@@ -263,8 +263,8 @@ export default function LandingPage({ onExploreMenu, onOpenLogin, onViewDisplay,
         <div className="lg:flex-[0.9] relative flex items-center lg:justify-end justify-center w-full min-h-[460px] z-10">
           
           {/* Main Plate back glow (warm glowing radial mesh behind the bowl) */}
-          <div className="absolute h-[380px] w-[380px] sm:h-[480px] sm:w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.18)_0%,transparent_70%)] blur-[50px] pointer-events-none" />
-          <div className="absolute h-[250px] w-[250px] sm:h-[320px] sm:w-[320px] rounded-full bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.12)_0%,transparent_70%)] blur-[40px] pointer-events-none mix-blend-screen" />
+          <div className="absolute h-[420px] w-[420px] sm:h-[540px] sm:w-[540px] rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.18)_0%,transparent_70%)] blur-[50px] pointer-events-none" />
+          <div className="absolute h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] rounded-full bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.12)_0%,transparent_70%)] blur-[40px] pointer-events-none mix-blend-screen" />
 
           {/* Core Plate Visual */}
           <motion.div 
@@ -275,7 +275,7 @@ export default function LandingPage({ onExploreMenu, onOpenLogin, onViewDisplay,
               x: mousePos.x,
               y: mousePos.y,
             }}
-            className="relative w-72 h-72 sm:w-96 sm:h-96 shrink-0"
+            className="relative w-80 h-80 sm:w-[440px] sm:h-[440px] shrink-0"
           >
             {/* The Plate Circle itself */}
             <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 p-1 shadow-2xl relative">
