@@ -139,7 +139,7 @@ export default function LandingPage({ onExploreMenu, onOpenLogin, onViewDisplay,
       <section className="relative mx-auto flex max-w-7xl flex-col lg:flex-row items-center justify-between px-6 pt-16 pb-36 md:px-12 gap-16">
         
         {/* Left Copy Column */}
-        <div className="flex-1 text-left z-10 space-y-8">
+        <div className="lg:flex-[1.3] text-left z-10 space-y-8">
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -260,7 +260,7 @@ export default function LandingPage({ onExploreMenu, onOpenLogin, onViewDisplay,
         </div>
 
         {/* Right Visual Stage Column */}
-        <div className="flex-1 relative flex items-center justify-center w-full min-h-[460px] z-10 lg:pr-12 xl:pr-16">
+        <div className="lg:flex-[0.9] relative flex items-center lg:justify-end justify-center w-full min-h-[460px] z-10">
           
           {/* Main Plate back glow (warm glowing radial mesh behind the bowl) */}
           <div className="absolute h-[380px] w-[380px] sm:h-[480px] sm:w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.18)_0%,transparent_70%)] blur-[50px] pointer-events-none" />
