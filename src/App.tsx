@@ -1087,7 +1087,11 @@ export default function App() {
       <footer className="w-full py-8 px-6 md:px-12 border-t border-white/5 bg-[#07080E]/60 text-center text-xs text-gray-500 font-mono mt-12">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} Smart Canteen. All rights reserved.</p>
-          <p>Developed with ❤️ by <span className="text-amber-500 font-semibold">arulselvanmahalingam</span></p>
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
+            <span>Developed with ❤️ by</span>
+            <img src="/profile.jpg" alt="arulselvanmahalingam" className="h-6 w-6 rounded-full object-cover border border-amber-500/30" />
+            <span className="text-amber-500 font-semibold">arulselvanmahalingam</span>
+          </div>
         </div>
       </footer>
     </div>
